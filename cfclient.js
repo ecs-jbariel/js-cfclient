@@ -210,7 +210,7 @@ CFClient.prototype.request = function (uri, method) {
                 if (200 != res.status) {
                     reject(CFClientException('Failed with status code: ' + res.statusCode, 'Failed with status code: ' + res.statusCode));
                 } else {
-                    fulfill(res.body);
+                    fulfill(JSON.stringify(res.body));
                 }
             }, reject);
         }
