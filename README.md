@@ -41,5 +41,8 @@ CfClient.connect().then(() => {
 }, console.error);
 ```
 
+# Example project
+You can find an example project [here](https://github.com/ecs-jbariel/cfclient-server-js)
+
 # Issues
 Please use the [Issues tab](../../issues) to report any problems or feature requests.
