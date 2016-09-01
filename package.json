@@ -17,7 +17,9 @@
   "keywords": [
     "CF",
     "PCF",
-    "API"
+    "API",
+    "Pivotal",
+    "Cloud Foundry"
   ],
   "author": "Jarrett Bariel <jbariel@ecsteam.com> (http://www.ecsteam.com)",
   "license": "Apache-2.0",
