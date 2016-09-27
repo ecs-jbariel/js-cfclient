@@ -183,7 +183,7 @@ CFClient.prototype.connect = function () {
 };
 
 /**
- * Make a request using the given client
+ * Make a request using the given client - will check to make sure the token is valid before the request.
  *
  * @param {String} uri - URI that follows the API version (e.g. 'organizations' instead of /v2/organizations)
  * @param {String} method - optional param that specifies the request method.  Defaults to 'GET'
@@ -197,23 +197,54 @@ CFClient.prototype.request = function (uri, method) {
         if (!cf.client) {
             reject(CFClientException('Client is not set', 'Need to set client...'));
         } else {
-            cf.client.request({
-                url: cf.config.protocol + '://' + cf.config.host + API_VERSION + uri,
-                method: method || 'GET',
-                options: {
-                    rejectUnauthorized: !cf.config.skipSslValidation
-                },
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then((res) => {
-                if (200 != res.status) {
-                    reject(CFClientException('Failed with status code: ' + res.statusCode, 'Failed with status code: ' + res.statusCode));
-                } else {
-                    fulfill(JSON.stringify(res.body));
-                }
-            }, reject);
+            if (cf.client.expired()) {
+                cf.client.refresh().then(
+                    (refreshedToken) => {
+                        cf.client = refreshedToken;
+                        cf._doRequest(uri, method).then(fulfill, reject);
+                    },
+                    () => {
+                        cf.connect().then(
+                            () => {
+                                cf._doRequest(uri, method).then(fulfill, reject);
+                            }, reject);
+                    });
+            }
+            else {
+                cf._doRequest(uri, method).then(fulfill, reject);
+            }
         }
+    });
+};
+
+/**
+ * Make a request using the given client - which we assume to be connected and happy
+ *
+ * @param {String} uri - URI that follows the API version (e.g. 'organizations' instead of /v2/organizations)
+ * @param {String} method - optional param that specifies the request method.  Defaults to 'GET'
+ *
+ * @promise fulfill({JSON} responseBody)
+ * @promise reject({object} err)
+ */
+CFClient.prototype._doRequest = function (uri, method) {
+    const cf = this;
+    return new Promise((fulfill, reject) => {
+        cf.client.request({
+            url: cf.config.protocol + '://' + cf.config.host + API_VERSION + uri,
+            method: method || 'GET',
+            options: {
+                rejectUnauthorized: !cf.config.skipSslValidation
+            },
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((res) => {
+            if (200 != res.status) {
+                reject(CFClientException('Failed with status code: ' + res.statusCode, 'Failed with status code: ' + res.statusCode));
+            } else {
+                fulfill(JSON.stringify(res.body));
+            }
+        }, reject);
     });
 };
 
