@@ -2,7 +2,7 @@
   "name": "js-cfclient",
   "version": "1.1.0",
   "description": "CF API client NPM",
-  "main": "cfclient.js",
+  "main": "lib/cfclient.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,8 +25,11 @@
   "license": "Apache-2.0",
   "dependencies": {
     "client-oauth2": "^2.2.0",
-    "promise": "^7.1.1"
+    "promise": "^7.1.1",
+    "output-manager": "^2.1.0"
   },
   "homepage": "https://github.com/ecs-jbariel/js-cfclient#readme",
-  "devDependencies": {}
+  "devDependencies": {
+    "jest": "^19.0.2"
+  }
 }
