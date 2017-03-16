@@ -4,7 +4,8 @@
   "description": "CF API client NPM",
   "main": "lib/cfclient.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -31,5 +32,8 @@
   "homepage": "https://github.com/ecs-jbariel/js-cfclient#readme",
   "devDependencies": {
     "jest": "^19.0.2"
+  },
+  "jest": {
+    "verbose": true
   }
 }
